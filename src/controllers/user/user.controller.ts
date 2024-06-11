@@ -1,10 +1,16 @@
-import e, { Request, Response } from "express";
+import { Request, Response } from "express";
 import { UserService } from "../../service/user.service";
+import { AppDataSource } from "../../data-source";
+import { User } from "../../entities/user";
 
 export class UserController {
-  constructor(private userService: UserService) {}
+  private userService: UserService;
 
-  public async createUser(req: Request, res: Response) {
+  constructor() {
+    this.userService = new UserService(AppDataSource.getRepository(User));
+  }
+
+  createUser = async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
     try {
       await this.userService.create(name, email, password);
@@ -14,14 +20,14 @@ export class UserController {
         error instanceof Error ? error.message : "Error creating user.";
       res.status(500).send(errorMessage);
     }
-  }
+  };
 
-  public async getAllUser(req: Request, res: Response) {
+  getAllUser = async (req: Request, res: Response) => {
     try {
       const users = await this.userService.findAll();
       res.status(200).send(users);
     } catch (error) {
       res.status(500).send({ message: "Error fetching users." });
     }
-  }
+  };
 }
