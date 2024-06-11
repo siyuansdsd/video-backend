@@ -1,6 +1,6 @@
 import { Entity, PrimaryColumn, Column } from "typeorm";
 
-@Entity()
+@Entity("video")
 export class Video {
   @PrimaryColumn()
   id!: string;
@@ -15,5 +15,5 @@ export class Video {
   url!: string;
 
   @Column()
-  userId!: string;
+  user_id!: string;
 }

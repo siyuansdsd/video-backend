@@ -1,6 +1,6 @@
 import { Entity, PrimaryColumn, Column } from "typeorm";
 
-@Entity()
+@Entity("app_user")
 export class User {
   @PrimaryColumn()
   id!: string;
@@ -15,5 +15,9 @@ export class User {
   password!: string;
 
   @Column("text", { array: true })
-  videoIdList!: string[];
+  video_id: string[];
+
+  constructor() {
+    this.video_id = [];
+  }
 }
