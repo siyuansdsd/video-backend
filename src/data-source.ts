@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { User } from "./entities/user";
 import { Video } from "./entities/video";
@@ -9,7 +10,7 @@ export const AppDataSource = new DataSource({
   username: "admin",
   password: "123",
   database: "videoDB",
-  synchronize: true,
+  synchronize: false,
   logging: false,
   entities: [User, Video],
   migrations: [],
@@ -19,3 +20,7 @@ export const AppDataSource = new DataSource({
     min: 2,
   },
 });
+
+AppDataSource.initialize()
+  .then(() => console.log("Database connected!"))
+  .catch((error) => console.error("Error connecting to database: ", error));
