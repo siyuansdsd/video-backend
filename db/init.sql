@@ -3,7 +3,9 @@ CREATE TABLE app_user (
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(100) NOT NULL,
-    video_id VARCHAR(100)[]
+    video_id VARCHAR(100)[],
+    refresh_token VARCHAR(500),
+    is_active BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE video (

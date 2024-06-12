@@ -17,7 +17,15 @@ export class User {
   @Column("text", { array: true })
   video_id: string[];
 
+  @Column()
+  refresh_token: string;
+
+  @Column({ default: false })
+  is_active: boolean;
+
   constructor() {
     this.video_id = [];
+    this.is_active = false;
+    this.refresh_token = "";
   }
 }

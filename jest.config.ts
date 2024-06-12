@@ -6,7 +6,7 @@ const config: Config = {
   moduleFileExtensions: ["ts", "js", "json"],
   moduleNameMapper: { "^@/(.*)$": "<rootDir>/src/$1" },
   testMatch: ["<rootDir>/src/**/*.spec.ts"],
-  collectCoverageFrom: ["<rootDir>/src/**/*.controller.ts"],
+  collectCoverageFrom: ["<rootDir>/src/**/*.service.ts"],
   coverageDirectory: "<rootDir>/coverage",
   coverageReporters: ["text-summary", "text"],
   rootDir: ".",
