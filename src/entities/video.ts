@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column } from "typeorm";
+import { Entity, PrimaryColumn, Column, CreateDateColumn } from "typeorm";
 
 @Entity("video")
 export class Video {
@@ -9,11 +9,21 @@ export class Video {
   title!: string;
 
   @Column()
-  description!: string;
+  description: string;
 
   @Column()
   url!: string;
 
+  @CreateDateColumn({ type: "timestamp" })
+  created_at: Date | undefined;
+
   @Column()
-  user_id!: string;
+  user_ids!: string;
+
+  @Column()
+  size!: number;
+
+  constructor() {
+    this.description = "";
+  }
 }
