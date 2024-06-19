@@ -1,5 +1,45 @@
 # Video Backend Project
 
+# Table of Content
+
+- [Introduction](#introduction)
+- [Technologies](#technologies-used)
+- [Getting_Started](#getting-started)
+- [Unit_Test](#unit-test)
+- [!!!important!!!](#important)
+
+## Introduction
+
+Really thank you for watching this project!
+
+### Background
+
+This project write for a code test' backend.
+
+### Key Features
+
+1. create users
+
+2. verify access token and refresh access tokens
+   we have 2 tokens, access token and refresh token, refresh token in stored in DB.
+   Both token use JWT
+
+3. send email verified email (user has an is_active attribute)
+
+4. encrypt the user's password for safety and privacy
+
+5. automatically create S3 Bucket
+
+6. upload video to AWS S3
+
+7. use postgres being a mapping of the real video resource
+
+8. delete video from S3 and postgreSQL
+
+9. Get video url from postgreSQL for frontend watching
+
+10. user ffmpeg to convert all video to MP4 before upload to S3
+
 ## Technologies Used
 
 This is backend build in following technics:
@@ -119,4 +159,14 @@ All files                 |   98.84 |    92.85 |   97.59 |   98.71 |
  service/video_file       |   92.59 |        0 |    87.5 |   92.15 |
   videoFile.service.ts    |   92.59 |        0 |    87.5 |   92.15 | 40,61,68,73
 --------------------------|---------|----------|---------|---------|-------------------
+Test Suites: 7 passed, 7 total
+Tests:       79 passed, 79 total
+Snapshots:   0 total
+Time:        4.109 s, estimated 5 s
 ```
+
+## Important
+
+Due to the use of AWS S3 Bucket service in this backend application, it is important to note that this service is not free. Although the costs are minimal over a short period, I must remind you to manually delete the S3 Bucket automatically created by this backend when it is no longer needed.
+
+Enjoy using the application, and feel free to contact me if you have any questions.
