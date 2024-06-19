@@ -23,11 +23,7 @@ export class AwsService {
         RestrictPublicBuckets: false,
       },
     };
-    try {
-      await this.s3.putPublicAccessBlock(params).promise();
-    } catch (error) {
-      console.log("Error disabling block public access", error);
-    }
+    await this.s3.putPublicAccessBlock(params).promise();
   };
 
   private setBucketPolicy = async (bucketName: string) => {
@@ -47,12 +43,8 @@ export class AwsService {
       Bucket: bucketName,
       Policy: JSON.stringify(policy),
     };
-    try {
-      await this.s3.putBucketPolicy(params).promise();
-      console.log("Bucket policy set successfully");
-    } catch (error) {
-      console.log("Error setting bucket policy", error);
-    }
+    await this.s3.putBucketPolicy(params).promise();
+    console.log("Bucket policy set successfully");
   };
 
   private checkBucket = async () => {

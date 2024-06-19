@@ -17,7 +17,7 @@ export class authController {
     const { name, email, password } = req.body;
     try {
       await this.authService.register(name, email, password);
-      res.status(201).send("A new user created!");
+      res.status(200).send({ message: "A new user created!" });
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Error creating user.";
@@ -28,12 +28,12 @@ export class authController {
   login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     try {
-      const loginMessgae = await this.authService.login(email, password);
-      res.status(200).send({ loginMessgae });
+      const loginMessage = await this.authService.login(email, password);
+      res.status(200).send({ message: loginMessage });
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Error logging in.";
-      res.status(500).send({ message: errorMessage, error });
+      res.status(500).send({ message: errorMessage });
     }
   };
 
@@ -41,7 +41,7 @@ export class authController {
     const { token } = req.params;
     try {
       const decode = this.authService.verifyEmailToken(token);
-      res.status(200).send("Email verified!");
+      res.status(200).send({ message: "Email verified!" });
       this.userService.active(decode.id);
     } catch (error) {
       res.status(500).send({ message: "Error verifying email." });

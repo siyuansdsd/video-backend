@@ -53,11 +53,12 @@ export class VideoFileService {
     const fileBuffer = file.buffer;
     const input = new PassThrough();
     const chunks: Buffer[] = [];
+    let isErrored = false;
     const ffmpegCommand = ffmpeg()
       .input(input)
       .output(outputFormat)
       .on("error", (err) => {
-        throw err;
+        isErrored = true;
       });
 
     const outputStream = ffmpegCommand.pipe(new PassThrough());
@@ -68,6 +69,9 @@ export class VideoFileService {
     });
 
     await promisify(finished)(outputStream);
+    if (isErrored) {
+      throw new Error("Error converting file");
+    }
 
     return Buffer.concat(chunks);
   };
