@@ -18,6 +18,7 @@ videoRouter.post(
   videoController.createVideoFile
 );
 videoRouter.delete("/video/:id", videoController.deleteVideoFile);
+videoRouter.get("/video/:id", videoController.getVideoFile);
 videoRouter.get("/video/user/:userId", videoController.getVideosByUser);
 
 export default videoRouter;

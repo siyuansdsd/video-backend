@@ -22,7 +22,7 @@ export class EmailService {
       from: `"VideoAI" <${process.env.EMAIL_ADDRESS}>`,
       to: email,
       subject: "Verification Email",
-      text: `Please click this link to verify your email: ${process.env.CLIENT_URL}/api/v1/auth/email/${token}`,
+      text: `Please click this link to verify your email: ${process.env.CLIENT_URL}/email_verify/${token}`,
     };
 
     await this.transporter.sendMail(mailOptions);

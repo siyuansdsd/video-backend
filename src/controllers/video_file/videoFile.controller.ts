@@ -22,39 +22,34 @@ export class VideoFileController {
     if (
       !req.body.title ||
       !req.body.description ||
-      !req.body.url ||
       !req.body.user_ids ||
       !req.file
     ) {
-      res.status(400).send("Missing required fields");
+      res.status(400).send({ message: "Missing required fields" });
       return;
     }
-    const { title, description, url, user_ids } = req.body;
+    const { title, description, user_ids } = req.body;
     const file = req.file;
     let fileBuffer = file.buffer;
     try {
       const decode = this.authService.verifyAccessToken(
         req.headers.authorization
       ) as AccessTokenPayload;
-      if (!decode) {
-        res.status(401).send("Invalid token");
-        return;
-      }
       if (decode.id !== user_ids) {
-        res.status(401).send("Invalid user");
+        res.status(401).send({ message: "Invalid user" });
         return;
       }
       if (!this.videoFileService.isSizeValid(file.size)) {
-        res
-          .status(400)
-          .send("file size is too large, the biggest file size is 100MB.");
+        res.status(400).send({
+          message: "file size is too large, the biggest file size is 100MB.",
+        });
         return;
       }
       if (!this.videoFileService.isVideoFile(file)) {
-        res.status(400).send("Invalid file format");
+        res.status(400).send({ message: "Invalid file format" });
         return;
       }
-      if (!this.videoFileService.isMp4File) {
+      if (!this.videoFileService.isMp4File(file)) {
         fileBuffer = await this.videoFileService.convertFileToMP4(file, "mp4");
       }
       const videoInfo = await this.videoFileService.create(
@@ -64,11 +59,11 @@ export class VideoFileController {
         file.size
       );
       await this.awsService.uploadFile(fileBuffer, videoInfo.id);
-      res.status(201).send("A new video file created!");
+      res.status(201).send({ message: "A new video file created!" });
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Error creating video file.";
-      res.status(500).send(errorMessage);
+      res.status(500).send({ message: errorMessage });
     }
   };
 
@@ -82,12 +77,8 @@ export class VideoFileController {
       const decode = this.authService.verifyAccessToken(
         req.headers.authorization
       ) as AccessTokenPayload;
-      if (!decode) {
-        res.status(401).send("Invalid token");
-        return;
-      }
       if (decode.id !== userId) {
-        res.status(401).send("Invalid user");
+        res.status(401).send({ message: "Invalid user" });
         return;
       }
       const videos = await this.videoFileService.getAllByUser(decode.id);
@@ -95,13 +86,13 @@ export class VideoFileController {
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Error getting videos.";
-      res.status(500).send(errorMessage);
+      res.status(500).send({ message: errorMessage });
     }
   };
 
   deleteVideoFile = async (req: Request, res: Response) => {
     if (!req.headers.authorization) {
-      res.status(401).send("Authorization header is required");
+      res.status(401).send({ message: "Authorization header is required" });
       return;
     }
     try {
@@ -109,24 +100,45 @@ export class VideoFileController {
       const decode = this.authService.verifyAccessToken(
         req.headers.authorization
       ) as AccessTokenPayload;
-      if (!decode) {
-        res.status(401).send("Invalid token");
-        return;
-      }
       const video = await this.videoFileService.findOne(id);
       if (video.user_ids !== decode.id) {
-        res
-          .status(401)
-          .send("Invalid user, only the owner can delete the video.");
+        res.status(401).send({
+          message: "Invalid user, only the owner can delete the video.",
+        });
         return;
       }
       await this.videoFileService.delete(id);
-      await this.awsService.deleteFile(id);
-      res.status(200).send("Video deleted");
+      await this.awsService.deleteFile(id + ".mp4");
+      res.status(200).send({ message: "Video deleted" });
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Error deleting video.";
-      res.status(500).send(errorMessage);
+      res.status(500).send({ message: errorMessage });
+    }
+  };
+
+  getVideoFile = async (req: Request, res: Response) => {
+    if (!req.headers.authorization) {
+      res.status(401).send({ message: "Authorization header is required" });
+      return;
+    }
+    try {
+      const { id } = req.params;
+      const decode = this.authService.verifyAccessToken(
+        req.headers.authorization
+      ) as AccessTokenPayload;
+      const video = await this.videoFileService.findOne(id);
+      if (video.user_ids !== decode.id) {
+        res.status(401).send({
+          message: "Invalid user, only the owner can get the video.",
+        });
+        return;
+      }
+      res.status(200).send(video);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Error getting video.";
+      res.status(500).send({ message: errorMessage });
     }
   };
 }
